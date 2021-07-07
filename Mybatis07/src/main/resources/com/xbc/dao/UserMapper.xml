@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xbc.dao.UserMapper">
+
+<!--    ======================== if ===========================-->
+    <!--    ======================== sql代码片段 ===========================-->
+    <sql id="if_">
+        <if test="tid != null">
+            tid = #{tid}
+        </if>
+        <if test="name != null">
+            and name like "%"#{name}"%"
+        </if>
+    </sql>
+    <select id="getUserIf" resultType="User" parameterType="map">
+        select *from user
+        <where>
+<!--            <if test="tid != null">-->
+<!--                tid = #{tid}-->
+<!--            </if>-->
+<!--            <if test="name != null">-->
+<!--                and name like "%"#{name}"%"-->
+<!--            </if>-->
+            <include refid="if_"></include>
+        </where>
+    </select>
+
+    <!--    ======================== Choose ===========================-->
+    <select id="getUserChoose" parameterType="map" resultType="User">
+        select *from user
+        <where>
+            <choose>
+                <when test="id!=null">
+                    id = #{id}
+                </when>
+                <when test="tid !=null">
+                    tid = #{tid}
+                </when>
+                <otherwise>
+                    and name = #{name}
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+    <!--    ======================== set ===========================-->
+    <update id="updateUserSet" parameterType="map">
+        update mybatis.user
+       <set>
+           <if test="tid != null">
+               tid = #{tid},
+           </if>
+           <if test="name !=null">
+               name = #{name}
+           </if>
+       </set>
+        where id = #{id}
+    </update>
+
+    <!--    ======================== Foreach ===========================-->
+    <select id="getUserForeach" parameterType="map" resultType="User">
+        select *from user
+            <where>
+                <foreach collection="list" open="and (" close=")" separator="or" item="id">
+                    id = #{id}
+                </foreach>
+            </where>
+    </select>
+</mapper>

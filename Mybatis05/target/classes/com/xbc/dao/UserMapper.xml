@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xbc.dao.UserMapper">
+    <!--  ===============================按照结果嵌套处理======================================  -->
+ <select id="getUserList" resultMap="userTeacher">
+     select u.* , t.name from user u,teacher t where u.tid = t.tid
+ </select>
+    <resultMap id="userTeacher" type="com.xbc.bean.User">
+        <result property="id" column="id"></result>
+        <result property="name" column="name"></result>
+        <result property="password" column="password"></result>
+        <association property="teacher" javaType="com.xbc.bean.Teacher">
+            <result property="name" column="name"></result>
+        </association>
+    </resultMap>
+
+
+<!--  =====================================================================  -->
+    <select id="getUserList" resultMap="userTeacher">
+        select *from user
+    </select>
+    <resultMap id="userTeacher" type="com.xbc.bean.User">
+        <result property="id" column="id"></result>
+        <result property="name" column="name"></result>
+        <result property="password" column="password"></result>
+        <!--    对象：association
+                集合：collection
+            -->
+        <association property="teacher" column="tid" javaType="com.xbc.bean.Teacher" select="getTeacher"></association>
+    </resultMap>
+
+    <select id="getTeacher" resultType="com.xbc.bean.Teacher">
+        select name
+        from teacher
+        where tid = #{tid}
+    </select>
+</mapper>

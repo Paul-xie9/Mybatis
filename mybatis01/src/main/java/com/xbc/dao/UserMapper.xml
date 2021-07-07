@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    resultType:sql语句返回的类型
+-->
+<!--namespace=绑定一个对应的Dao/Mapper接口-->
+<mapper namespace="com.xbc.dao.UserDao">
+    <!--  结果集映射 -->
+    <resultMap id="UserMap" type="User">
+        <!--    column是数据库中的列名，property是实体类中的    -->
+        <result column="id" property="id"></result>
+        <result column="name" property="name"></result>
+        <result column="password" property="pwd"></result>
+    </resultMap>
+    <select id="getUserList" resultMap="UserMap">
+        select *
+        from mybatis.user
+    </select>
+    <insert id="addUser" parameterType="com.xbc.entity.User">
+        insert into user
+        values (#{id}, #{name}, #{password})
+    </insert>
+    <select id="getUserById" parameterType="int" resultType="com.xbc.entity.User">
+        select *
+        from user
+        where id = #{id}
+    </select>
+
+    <update id="updateUser" parameterType="com.xbc.entity.User">
+        update user
+        set name     = #{name},
+            password = #{password}
+        where id = #{id}
+    </update>
+
+    <insert id="updateUser2" parameterType="int">
+        insert into user
+        values (#{id}, #{name}, #{password})
+    </insert>
+    <select id="getUserListByname" resultType="User">
+        select *
+        from user
+        where name like "%"#{name}"%"
+    </select>
+
+
+</mapper>
